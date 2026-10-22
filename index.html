@@ -1,1419 +1,974 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SG Driving BTT Flashcards & Practice Test</title>
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Master the Singapore Basic Theory Test (BTT) with interactive flashcards and practice exams based on the SG Highway Code.">
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlNHIEJUVCBGbGFzaGNhcmRzIiwKICAic2hvcnRfbmFtZSI6ICJTRyBCVFQiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTcyYSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJpY29ucyI6IFtdCn0=">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sgNavy: '#0c2340',
-                        sgAmber: '#f59e0b',
-                        sgRed: '#dc2626',
-                        sgGreen: '#10b981',
-                        sgBlue: '#2563eb'
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="description" content="Singapore Basic Theory Test (BTT) Flashcards & Practice Exam PWA">
+  <title>SG BTT Master - Singapore Driving Theory PWA</title>
+  
+  <!-- Manifest & Favicon -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SG%20BTT%20Master%22%2C%22short_name%22%3A%22BTT%20Master%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27128%27%2520fill%3D%27%25232563eb%27%2F%253E%253Cpath%2520d%3D%27M256%252090L380%2520370H132L256%252090Z%27%2520fill%3D%27white%27%2F%253E%253Cpath%2520d%3D%27M256%2520140L340%2520340H172L256%2520140Z%27%2520fill%3D%27%25232563eb%27%2F%253E%253Ctext%2520x%3D%27256%27%2520y%3D%27300%27%2520font-size%3D%2790%27%2520font-weight%3D%27bold%27%2520text-anchor%3D%27middle%27%2520fill%3D%27white%27%2520font-family%3D%27sans-serif%27%253EBTT%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <style>
-        /* Modern 3D Card Flip Animation */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-    </style>
+  <style>
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    
+    /* Custom scrollbar for question palette */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
 </head>
-<body class="h-full font-sans antialiased bg-slate-900 text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-900">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500 selection:text-white">
 
-    <!-- Header Navigation -->
-    <header class="bg-slate-800/90 backdrop-blur border-b border-slate-700/60 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Brand -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center font-black text-slate-900 shadow-lg shadow-amber-500/20 text-xl">
-                    SG
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight tracking-wide text-white flex items-center gap-2">
-                        BTT Master SG
-                        <span class="text-xs font-normal px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Official Rules</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Singapore Basic Theory Test Guide</p>
-                </div>
-            </div>
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('flashcards')">
+        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20 font-bold text-xl">
+          SG
+        </div>
+        <div>
+          <h1 class="font-bold text-slate-900 leading-tight">BTT Master</h1>
+          <p class="text-xs text-slate-500 font-medium">Singapore Traffic Police Pass Guarantee</p>
+        </div>
+      </div>
 
-            <!-- Mode Selector / Desktop -->
-            <div class="hidden sm:flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-700/60">
-                <button id="btn-mode-flashcards" onclick="setMode('flashcards')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-amber-500 text-slate-950 font-semibold shadow-md">
-                    <i data-lucide="layers" class="w-4 h-4"></i> Flashcards
-                </button>
-                <button id="btn-mode-exam" onclick="setMode('exam')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i data-lucide="clipboard-check" class="w-4 h-4"></i> Mock Exam
-                </button>
-                <button id="btn-mode-stats" onclick="setMode('stats')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Dashboard
-                </button>
-            </div>
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <button id="nav-flashcards" onclick="switchTab('flashcards')" class="px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors bg-blue-50 text-blue-600">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Flashcards</span>
+        </button>
+        <button id="nav-exam" onclick="switchTab('exam')" class="px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Mock Exam</span>
+        </button>
+        <button id="nav-stats" onclick="switchTab('stats')" class="px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Stats</span>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-            <!-- Mobile Action Menu -->
-            <div class="flex sm:hidden items-center gap-2">
-                <button onclick="toggleMobileMenu()" class="p-2 text-slate-300 hover:bg-slate-700/50 rounded-lg">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-            </div>
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- TAB 1: FLASHCARDS MODE -->
+    <section id="tab-flashcards" class="flex flex-col items-center gap-6">
+      
+      <!-- Filter & Controls Toolbar -->
+      <div class="w-full flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-2">
+          <label for="category-filter" class="text-xs font-bold text-slate-500 uppercase tracking-wider pl-1">Category:</label>
+          <select id="category-filter" onchange="filterFlashcards()" class="bg-slate-100 border-0 rounded-lg text-sm font-medium px-3 py-1.5 focus:ring-2 focus:ring-blue-500 text-slate-700">
+            <option value="All">All Topics</option>
+            <option value="Road Signs">Road Signs</option>
+            <option value="Traffic Rules">Traffic Rules</option>
+            <option value="Expressway">Expressway Rules</option>
+            <option value="DIPS">Demerit Points (DIPS)</option>
+            <option value="Safety">Safety & Hand Signals</option>
+          </select>
         </div>
 
-        <!-- Mobile Menu Drawer -->
-        <div id="mobile-menu" class="hidden sm:hidden border-t border-slate-700/60 bg-slate-800 px-4 py-3 flex flex-col gap-2">
-            <button onclick="setMode('flashcards'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center gap-3 bg-slate-700/50 text-amber-400">
-                <i data-lucide="layers" class="w-4 h-4"></i> Flashcards
-            </button>
-            <button onclick="setMode('exam'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center gap-3 text-slate-300 hover:bg-slate-700/50">
-                <i data-lucide="clipboard-check" class="w-4 h-4"></i> Mock Exam (50 Qs)
-            </button>
-            <button onclick="setMode('stats'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium flex items-center gap-3 text-slate-300 hover:bg-slate-700/50">
-                <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Progress & Stats
-            </button>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleBookmarkCurrent()" id="btn-bookmark" class="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors" title="Bookmark Question">
+            <i data-lucide="bookmark" class="w-5 h-5"></i>
+          </button>
+          <button onclick="shuffleCards()" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Shuffle Cards">
+            <i data-lucide="shuffle" class="w-5 h-5"></i>
+          </button>
+          <span id="card-counter" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg">
+            1 / 20
+          </span>
         </div>
-    </header>
+      </div>
 
-    <!-- Main Content Container -->
-    <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full">
-
-        <!-- ================= FLASHCARDS VIEW ================= -->
-        <section id="view-flashcards" class="space-y-6">
-            <!-- Filter & Controls bar -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-800/60 p-4 rounded-2xl border border-slate-700/50">
-                <div class="flex flex-wrap items-center gap-2">
-                    <label class="text-xs text-slate-400 font-semibold uppercase tracking-wider block w-full md:w-auto">Category:</label>
-                    <select id="fc-category-select" onchange="filterFlashcards()" class="bg-slate-900 border border-slate-700 text-sm rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50">
-                        <option value="ALL">All Categories (Comprehensive)</option>
-                        <option value="Road Signs & Markings">Road Signs & Markings</option>
-                        <option value="Traffic Rules & Signals">Traffic Rules & Signals</option>
-                        <option value="Expressway Driving">Expressway Driving Rules</option>
-                        <option value="Demerit & Licensing">Demerit Points & Licensing</option>
-                        <option value="Safety & Hand Signals">Safety, Parking & Hand Signals</option>
-                    </select>
-                </div>
-
-                <div class="flex items-center justify-between md:justify-end gap-3">
-                    <label class="inline-flex items-center cursor-pointer text-xs text-slate-300">
-                        <input type="checkbox" id="toggle-review-only" onchange="filterFlashcards()" class="sr-only peer">
-                        <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 relative"></div>
-                        <span class="ml-2 font-medium">Needs Review Only (<span id="count-needs-review">0</span>)</span>
-                    </label>
-
-                    <button onclick="shuffleFlashcards()" class="px-3 py-1.5 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition">
-                        <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Shuffle
-                    </button>
-                </div>
+      <!-- 3D Flip Card -->
+      <div class="w-full max-w-xl perspective-1000">
+        <div id="flashcard" onclick="flipCard()" class="relative w-full min-h-[380px] sm:min-h-[420px] rounded-3xl border border-slate-200 bg-white shadow-xl cursor-pointer transition-transform duration-500 transform-style-3d">
+          
+          <!-- Front Face -->
+          <div class="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 flex flex-col justify-between backface-hidden bg-white">
+            <div class="flex items-center justify-between">
+              <span id="card-category" class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                Road Signs
+              </span>
+              <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Click to Flip
+              </span>
             </div>
 
-            <!-- Flashcard Container -->
-            <div class="flex flex-col items-center justify-center min-h-[420px]">
-                <div id="flashcard-box" class="w-full max-w-xl perspective-1000 cursor-pointer select-none group" onclick="flipCard()">
-                    <div id="flashcard-inner" class="relative w-full min-h-[380px] sm:min-h-[420px] rounded-3xl transition-transform duration-500 transform-style-3d shadow-2xl border border-slate-700/80 bg-slate-800">
-                        
-                        <!-- CARD FRONT -->
-                        <div class="absolute inset-0 w-full h-full backface-hidden p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl">
-                            <div>
-                                <!-- Card Header -->
-                                <div class="flex items-center justify-between border-b border-slate-700/60 pb-3 mb-4">
-                                    <span id="fc-category-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                        Road Signs
-                                    </span>
-                                    <div class="flex items-center gap-2">
-                                        <button onclick="event.stopPropagation(); toggleBookmarkCurrent()" class="text-slate-400 hover:text-amber-400 transition" title="Bookmark Question">
-                                            <i id="fc-bookmark-icon" data-lucide="bookmark" class="w-5 h-5"></i>
-                                        </button>
-                                        <span id="fc-counter" class="text-xs font-mono text-slate-400">1 / 50</span>
-                                    </div>
-                                </div>
-
-                                <!-- Card SVG / Visual Asset if applicable -->
-                                <div id="fc-visual-container" class="my-4 flex justify-center items-center min-h-[110px]">
-                                    <!-- Render SVG or Icon -->
-                                </div>
-
-                                <!-- Question Text -->
-                                <h2 id="fc-question-text" class="text-lg sm:text-xl font-bold text-white text-center leading-snug tracking-tight">
-                                    What does this traffic sign signify?
-                                </h2>
-                            </div>
-
-                            <!-- Click to Flip Indicator -->
-                            <div class="text-center border-t border-slate-800 pt-3">
-                                <p class="text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium group-hover:text-amber-400 transition">
-                                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Click card or press <kbd class="px-1.5 py-0.5 text-[10px] bg-slate-700 rounded border border-slate-600">Space</kbd> to reveal answer
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- CARD BACK -->
-                        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 p-6 sm:p-8 flex flex-col justify-between bg-slate-900 border-2 border-amber-500/30 rounded-3xl overflow-y-auto">
-                            <div>
-                                <div class="flex items-center justify-between border-b border-slate-700/60 pb-3 mb-4">
-                                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i> Correct Answer
-                                    </span>
-                                    <span id="fc-status-tag" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-slate-800 text-slate-400">Unmastered</span>
-                                </div>
-
-                                <!-- Highlighted Correct Answer -->
-                                <div class="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 mb-4">
-                                    <p id="fc-correct-answer" class="text-base sm:text-lg font-bold text-emerald-300">
-                                        Stop completely before the stop line and give way to traffic.
-                                    </p>
-                                </div>
-
-                                <!-- Detailed Explanation -->
-                                <div class="space-y-3 text-sm text-slate-300">
-                                    <div>
-                                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Highway Code Explanation</h4>
-                                        <p id="fc-explanation" class="leading-relaxed text-slate-300">
-                                            Drivers must bring their vehicle to a complete stop before the stop line at an intersection and yield the right of way to vehicles on the major road.
-                                        </p>
-                                    </div>
-                                    <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
-                                        <p class="text-xs text-amber-300 font-medium flex items-start gap-2">
-                                            <i data-lucide="lightbulb" class="w-4 h-4 shrink-0 text-amber-400"></i>
-                                            <span id="fc-takeaway">Key Takeaway: Stopping is mandatory even if no oncoming traffic is visible.</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="text-center pt-3 border-t border-slate-800">
-                                <span class="text-xs text-slate-500">Tap card to flip back to question</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Card Controls & Spaced Repetition Buttons -->
-                <div class="w-full max-w-xl mt-6 flex flex-col gap-4">
-                    <div class="flex items-center justify-between gap-2">
-                        <button onclick="prevCard()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm flex items-center gap-2 border border-slate-700 transition">
-                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Prev
-                        </button>
-
-                        <div class="flex items-center gap-2">
-                            <button onclick="markCardMastery(false)" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition">
-                                <i data-lucide="x-circle" class="w-4 h-4"></i> Need Review
-                            </button>
-                            <button onclick="markCardMastery(true)" class="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-1.5 transition">
-                                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Mastered
-                            </button>
-                        </div>
-
-                        <button onclick="nextCard()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center gap-2 shadow-lg shadow-amber-500/10 transition">
-                            Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-
-                    <!-- Keyboard Shortcut Hint -->
-                    <p class="text-center text-xs text-slate-500 hidden sm:block">
-                        Shortcuts: <kbd class="px-1 bg-slate-800 rounded">←</kbd> <kbd class="px-1 bg-slate-800 rounded">→</kbd> Navigate | <kbd class="px-1 bg-slate-800 rounded">Space</kbd> Flip | <kbd class="px-1 bg-slate-800 rounded">M</kbd> Master | <kbd class="px-1 bg-slate-800 rounded">R</kbd> Review
-                    </p>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= MOCK EXAM VIEW ================= -->
-        <section id="view-exam" class="hidden space-y-6">
-            <!-- Exam Intro Screen -->
-            <div id="exam-intro" class="bg-slate-800/80 rounded-3xl border border-slate-700/60 p-6 sm:p-10 text-center max-w-2xl mx-auto space-y-6">
-                <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto">
-                    <i data-lucide="shield-alert" class="w-8 h-8"></i>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Singapore BTT Official Simulation</h2>
-                    <p class="text-slate-300 text-sm max-w-md mx-auto">
-                        Simulates the actual Driving Centre theory test (CDC, BBDC, SSDCL).
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-3 gap-3 text-left max-w-md mx-auto text-xs">
-                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700">
-                        <span class="text-slate-400 block mb-1">Questions</span>
-                        <strong class="text-slate-100 text-base">50 Questions</strong>
-                    </div>
-                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700">
-                        <span class="text-slate-400 block mb-1">Time Limit</span>
-                        <strong class="text-slate-100 text-base">50 Minutes</strong>
-                    </div>
-                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700">
-                        <span class="text-slate-400 block mb-1">Passing Mark</span>
-                        <strong class="text-emerald-400 text-base">45 / 50 (90%)</strong>
-                    </div>
-                </div>
-
-                <div class="p-4 bg-slate-900/40 rounded-xl text-left border border-slate-800 text-xs text-slate-400 space-y-2">
-                    <p class="font-semibold text-slate-300 flex items-center gap-1.5">
-                        <i data-lucide="info" class="w-4 h-4 text-amber-400"></i> Test Guidelines:
-                    </p>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li>Each question has 3 multiple-choice options with only 1 correct answer.</li>
-                        <li>You can skip and navigate between questions freely before submitting.</li>
-                        <li>Detailed explanations will be shown after test submission.</li>
-                    </ul>
-                </div>
-
-                <button onclick="startExam()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl text-base shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 mx-auto">
-                    <i data-lucide="play" class="w-5 h-5 fill-slate-950"></i> Start Mock Test Now
-                </button>
+            <!-- Question Content & Optional SVG Sign -->
+            <div class="my-auto flex flex-col items-center text-center gap-4">
+              <div id="card-svg-container" class="hidden w-28 h-28 flex items-center justify-center"></div>
+              <h2 id="card-question" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                Loading question...
+              </h2>
             </div>
 
-            <!-- Active Exam Screen -->
-            <div id="exam-active" class="hidden space-y-6">
-                <!-- Exam Top Status Bar -->
-                <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl font-mono text-sm font-bold">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
-                            <span id="exam-timer">50:00</span>
-                        </div>
-                        <span class="text-xs text-slate-400 font-medium">Question <strong text-white id="exam-current-idx">1</strong> of 50</span>
-                    </div>
+            <div class="text-center">
+              <p class="text-xs text-slate-400 font-medium">Spacebar or Click card to reveal answer</p>
+            </div>
+          </div>
 
-                    <div class="flex items-center gap-3">
-                        <button onclick="confirmSubmitExam()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5">
-                            <i data-lucide="send" class="w-3.5 h-3.5"></i> Submit Exam
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Exam Question Card -->
-                <div class="bg-slate-800 rounded-3xl border border-slate-700/80 p-6 sm:p-8 space-y-6">
-                    <div id="exam-visual-container" class="flex justify-center my-2"></div>
-
-                    <h3 id="exam-question-text" class="text-lg sm:text-xl font-bold text-white leading-snug">
-                        Question text loading...
-                    </h3>
-
-                    <!-- Options list -->
-                    <div id="exam-options-container" class="space-y-3">
-                        <!-- Options generated dynamically -->
-                    </div>
-                </div>
-
-                <!-- Exam Bottom Navigation Bar -->
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center gap-2">
-                        <button onclick="navigateExam(-1)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5">
-                            <i data-lucide="chevron-left" class="w-4 h-4"></i> Previous
-                        </button>
-                        <button onclick="navigateExam(1)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5">
-                            Next <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-
-                    <!-- Question Grid Palette Drawer Trigger -->
-                    <div class="w-full sm:w-auto flex items-center justify-center gap-1 overflow-x-auto py-1 max-w-md" id="exam-mini-grid">
-                        <!-- 50 question status dots -->
-                    </div>
-                </div>
+          <!-- Back Face -->
+          <div class="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 flex flex-col justify-between backface-hidden rotate-y-180 bg-slate-900 text-white">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-800">
+                Correct Answer
+              </span>
+              <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Click to Flip Back
+              </span>
             </div>
 
-            <!-- Exam Results Screen -->
-            <div id="exam-results" class="hidden space-y-6">
-                <div class="bg-slate-800 rounded-3xl border border-slate-700 p-6 sm:p-10 text-center max-w-2xl mx-auto space-y-6">
-                    <div id="result-badge" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto text-3xl font-black">
-                        <!-- Passed / Failed badge -->
-                    </div>
-
-                    <div>
-                        <h2 id="result-status-title" class="text-2xl font-bold text-white">Exam Completed</h2>
-                        <p id="result-status-sub" class="text-slate-400 text-sm mt-1">Here is your performance breakdown</p>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
-                        <div class="p-4 bg-slate-900/60 rounded-2xl border border-slate-700">
-                            <span class="text-xs text-slate-400 block mb-1">Score</span>
-                            <strong id="result-score" class="text-2xl font-bold text-amber-400">46/50</strong>
-                        </div>
-                        <div class="p-4 bg-slate-900/60 rounded-2xl border border-slate-700">
-                            <span class="text-xs text-slate-400 block mb-1">Percentage</span>
-                            <strong id="result-percentage" class="text-2xl font-bold text-emerald-400">92%</strong>
-                        </div>
-                        <div class="p-4 bg-slate-900/60 rounded-2xl border border-slate-700">
-                            <span class="text-xs text-slate-400 block mb-1">Time Spent</span>
-                            <strong id="result-time-spent" class="text-2xl font-bold text-slate-200">24m 10s</strong>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap items-center justify-center gap-3">
-                        <button onclick="startExam()" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition flex items-center gap-2">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Retake Practice Test
-                        </button>
-                        <button onclick="setMode('flashcards')" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-sm rounded-xl transition flex items-center gap-2">
-                            <i data-lucide="layers" class="w-4 h-4"></i> Review Flashcards
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Review Incorrect Answers Section -->
-                <div class="bg-slate-800/80 rounded-3xl border border-slate-700 p-6 space-y-4">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i data-lucide="file-search" class="w-5 h-5 text-amber-400"></i> Full Question Review
-                    </h3>
-                    <div id="exam-review-list" class="space-y-4">
-                        <!-- Reviewed questions listed here -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= DASHBOARD / STATS VIEW ================= -->
-        <section id="view-stats" class="hidden space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-5 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
-                        <i data-lucide="award" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs text-slate-400 font-semibold block">Overall Mastery</span>
-                        <strong id="dash-mastery-pct" class="text-xl font-bold text-white">0%</strong>
-                    </div>
-                </div>
-
-                <div class="p-5 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
-                        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs text-slate-400 font-semibold block">Cards Mastered</span>
-                        <strong id="dash-mastered-count" class="text-xl font-bold text-white">0 / 50</strong>
-                    </div>
-                </div>
-
-                <div class="p-5 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold">
-                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs text-slate-400 font-semibold block">Needs Review</span>
-                        <strong id="dash-review-count" class="text-xl font-bold text-white">0</strong>
-                    </div>
-                </div>
-
-                <div class="p-5 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
-                        <i data-lucide="history" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs text-slate-400 font-semibold block">Mock Exams Taken</span>
-                        <strong id="dash-exams-count" class="text-xl font-bold text-white">0</strong>
-                    </div>
-                </div>
+            <div class="my-auto flex flex-col gap-4 text-left">
+              <div id="card-answer" class="text-xl sm:text-2xl font-bold text-emerald-300 border-l-4 border-emerald-400 pl-4 py-1">
+                Answer text...
+              </div>
+              <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/60">
+                <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">TP Highway Code Explanation</h4>
+                <p id="card-explanation" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  Explanation...
+                </p>
+              </div>
             </div>
 
-            <!-- Detailed Progress Breakdown -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4">
-                    <h3 class="font-bold text-white text-base flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-5 h-5 text-amber-400"></i> Category Readiness
-                    </h3>
-                    <div id="dash-category-progress" class="space-y-3">
-                        <!-- Progress bars for categories -->
-                    </div>
-                </div>
-
-                <div class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-bold text-white text-base flex items-center gap-2">
-                            <i data-lucide="bookmark" class="w-5 h-5 text-amber-400"></i> Bookmarked Questions (<span id="dash-bookmark-count">0</span>)
-                        </h3>
-                        <button onclick="clearBookmarks()" class="text-xs text-slate-400 hover:text-rose-400">Clear All</button>
-                    </div>
-                    <div id="dash-bookmarks-list" class="space-y-2 max-h-[250px] overflow-y-auto pr-2">
-                        <!-- Bookmarks -->
-                    </div>
-                </div>
+            <div class="text-center">
+              <p class="text-xs text-slate-400">Mark your review status below to adjust spaced repetition</p>
             </div>
+          </div>
 
-            <!-- Reset Data Action -->
-            <div class="bg-slate-800/40 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
-                <div>
-                    <h4 class="text-sm font-semibold text-slate-300">Reset Study Progress</h4>
-                    <p class="text-xs text-slate-500">Clears all mastered tags, mock test history, and bookmarks.</p>
-                </div>
-                <button onclick="resetAllProgress()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-xs font-bold transition">
-                    Reset Progress Data
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950/60 py-4 text-center text-xs text-slate-500">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>Singapore Basic Theory Test (BTT) Study Companion • Based on Official Police Highway Code</p>
-            <p class="text-slate-600">Offline PWA Enabled</p>
         </div>
-    </footer>
-
-    <!-- AUDIO SYNTHESIS & APPDATA JS -->
-    <script>
-        /* ==========================================================================
-           1. QUESTION BANK DATA (Comprehensive SG BTT Official Rules)
-           ========================================================================== */
-        const QUESTION_BANK = [
-            {
-                id: "btt-1",
-                category: "Road Signs & Markings",
-                question: "What does this circular traffic sign with a red border and white background signify?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="42" fill="#ffffff" stroke="#dc2626" stroke-width="12"/>
-                    <rect x="22" y="44" width="56" height="12" fill="#dc2626"/>
-                </svg>`,
-                options: [
-                    "No Entry for all motor vehicles",
-                    "Stop and give way",
-                    "No Parking permitted"
-                ],
-                answer: 0,
-                explanation: "The 'No Entry' sign prohibits all vehicles from entering a roadway or ramp where entry is restricted.",
-                takeaway: "Red ring with horizontal bar = Absolute NO ENTRY for vehicles."
-            },
-            {
-                id: "btt-2",
-                category: "Road Signs & Markings",
-                question: "What must you do when approaching an octagonal red 'STOP' sign?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30" fill="#dc2626"/>
-                    <text x="50" y="58" font-family="Arial" font-weight="bold" font-size="24" fill="white" text-anchor="middle">STOP</text>
-                </svg>`,
-                options: [
-                    "Slow down and proceed if the road is clear",
-                    "Stop completely before the stop line and give way to all cross traffic",
-                    "Honk and proceed with caution"
-                ],
-                answer: 1,
-                explanation: "You MUST bring your vehicle to a complete standstill behind the stop line. Simply slowing down is an offence.",
-                takeaway: "Complete stop required regardless of traffic conditions."
-            },
-            {
-                id: "btt-3",
-                category: "Road Signs & Markings",
-                question: "What does an inverted triangular sign with a red border mean?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <polygon points="10,15 90,15 50,85" fill="#ffffff" stroke="#dc2626" stroke-width="10"/>
-                    <text x="50" y="40" font-family="Arial" font-weight="bold" font-size="12" fill="#dc2626" text-anchor="middle">GIVE</text>
-                    <text x="50" y="55" font-family="Arial" font-weight="bold" font-size="12" fill="#dc2626" text-anchor="middle">WAY</text>
-                </svg>`,
-                options: [
-                    "GIVE WAY: Slow down and yield right of way to traffic on the main road",
-                    "Priority road ahead",
-                    "Narrow bridge ahead"
-                ],
-                answer: 0,
-                explanation: "The 'GIVE WAY' sign requires you to yield to traffic on the major road, stopping if necessary.",
-                takeaway: "Yield right-of-way to oncoming/cross traffic."
-            },
-            {
-                id: "btt-4",
-                category: "Road Signs & Markings",
-                question: "What does a circular sign displaying a speed number '50' inside a red ring mean?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="42" fill="#ffffff" stroke="#dc2626" stroke-width="10"/>
-                    <text x="50" y="62" font-family="Arial" font-weight="bold" font-size="36" fill="#000000" text-anchor="middle">50</text>
-                </svg>`,
-                options: [
-                    "Recommended speed limit of 50 km/h",
-                    "Maximum speed limit of 50 km/h in force",
-                    "Minimum speed limit of 50 km/h"
-                ],
-                answer: 1,
-                explanation: "Red circular border signs indicate mandatory prohibitions or maximum limits. 50 km/h is the maximum speed permitted.",
-                takeaway: "Red circle = Mandatory Speed Limit."
-            },
-            {
-                id: "btt-5",
-                category: "Traffic Rules & Signals",
-                question: "What does an amber traffic light signal mean when you are approaching an intersection?",
-                signSvg: `<svg width="60" height="100" viewBox="0 0 60 100">
-                    <rect x="5" y="5" width="50" height="90" rx="10" fill="#1e293b" stroke="#475569" stroke-width="3"/>
-                    <circle cx="30" cy="22" r="10" fill="#334155"/>
-                    <circle cx="30" cy="50" r="10" fill="#f59e0b"/>
-                    <circle cx="30" cy="78" r="10" fill="#334155"/>
-                </svg>`,
-                options: [
-                    "Speed up to cross before red light turns on",
-                    "Stop behind the stop line, unless you are too close to stop safely",
-                    "Amber means proceed with caution without stopping"
-                ],
-                answer: 1,
-                explanation: "Amber means STOP unless your vehicle is so close to the stop line that stopping abruptly may cause an accident.",
-                takeaway: "Amber light = Stop unless unsafe to do so."
-            },
-            {
-                id: "btt-6",
-                category: "Traffic Rules & Signals",
-                question: "What does a flashing amber light at a traffic light junction indicate?",
-                options: [
-                    "The traffic signal is out of order; proceed with caution and yield right-of-way",
-                    "Emergency vehicles are approaching",
-                    "You must stop completely and wait 3 minutes"
-                ],
-                answer: 0,
-                explanation: "Flashing amber indicates signal malfunction or reduced control. Drivers must exercise caution and treat as an uncontrolled junction.",
-                takeaway: "Flashing Amber = Caution / Uncontrolled junction rules apply."
-            },
-            {
-                id: "btt-7",
-                category: "Traffic Rules & Signals",
-                question: "When turning right at a non-discretionary green arrow junction, when can you proceed?",
-                options: [
-                    "Only when the green arrow signal lights up",
-                    "Whenever the main green light is on and no pedestrian is crossing",
-                    "When the opposite traffic stops"
-                ],
-                answer: 0,
-                explanation: "Red right-turn arrow signals forbid turning right until the green arrow lights up.",
-                takeaway: "Green Arrow = Exclusive right turn permission."
-            },
-            {
-                id: "btt-8",
-                category: "Demerit & Licensing",
-                question: "Under the Driver Improvement Points System (DIPS), how many demerit points within 12 months cause a new probationary driver to lose their license?",
-                options: [
-                    "12 demerit points",
-                    "18 demerit points",
-                    "24 demerit points"
-                ],
-                answer: 0,
-                explanation: "Probationary drivers who accumulate 12 or more demerit points within their 1-year probation period will have their driving license revoked.",
-                takeaway: "Probation limit = 12 demerit points."
-            },
-            {
-                id: "btt-9",
-                category: "Demerit & Licensing",
-                question: "What is the legal blood alcohol concentration (BAC) limit for drivers in Singapore?",
-                options: [
-                    "35 microgrammes of alcohol per 100ml of breath (or 80mg per 100ml blood)",
-                    "50 microgrammes of alcohol per 100ml of breath",
-                    "80 microgrammes of alcohol per 100ml of breath"
-                ],
-                answer: 0,
-                explanation: "In Singapore, the prescribed limit is 35 µg of alcohol per 100 ml of breath or 80 mg of alcohol per 100 ml of blood.",
-                takeaway: "Legal Breath Limit = 35 µg/100ml."
-            },
-            {
-                id: "btt-10",
-                category: "Expressway Driving",
-                question: "What is the general speed limit on expressways in Singapore unless signed otherwise?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <rect x="10" y="10" width="80" height="80" rx="16" fill="#0284c7"/>
-                    <path d="M30 75 L45 25 L55 25 L70 75 M35 55 L65 55" stroke="white" stroke-width="6" fill="none"/>
-                </svg>`,
-                options: [
-                    "70 km/h or 80 km/h",
-                    "90 km/h",
-                    "110 km/h"
-                ],
-                answer: 1,
-                explanation: "The default expressway speed limit is 90 km/h (or 80 km/h on designated expressway stretches like KPE/MCE).",
-                takeaway: "Max SG expressway speed = 90 km/h."
-            },
-            {
-                id: "btt-11",
-                category: "Expressway Driving",
-                question: "Which lane on a 3-lane dual carriageway expressway is designated for overtaking only?",
-                options: [
-                    "The extreme left lane (Lane 3)",
-                    "The middle lane (Lane 2)",
-                    "The extreme right lane (Lane 1)"
-                ],
-                answer: 2,
-                explanation: "Lane 1 (extreme right) is strictly reserved for overtaking. Continuous hogging of Lane 1 is an offence.",
-                takeaway: "Right lane (Lane 1) = Overtaking only."
-            },
-            {
-                id: "btt-12",
-                category: "Expressway Driving",
-                question: "Are learner drivers holding a Class 3 or 3A Provisional Driving Licence (PDL) permitted to drive on expressways?",
-                options: [
-                    "Yes, if accompanied by a certified instructor",
-                    "No, PDL holders are strictly prohibited from driving on expressways",
-                    "Yes, between 9:00am and 4:00pm only"
-                ],
-                answer: 1,
-                explanation: "PDL holders are NOT allowed to drive on expressways under any circumstances in Singapore.",
-                takeaway: "PDL = NO Expressway driving."
-            },
-            {
-                id: "btt-13",
-                category: "Safety & Hand Signals",
-                question: "What does it mean when a driver extends their right arm horizontally out of the window with palm facing forward?",
-                signSvg: `<svg width="100" height="100" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="#334155"/>
-                    <path d="M20 50 L75 50 M60 35 L75 50 L60 65" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                </svg>`,
-                options: [
-                    "The driver intends to turn right",
-                    "The driver intends to stop or slow down",
-                    "The driver is signaling you to overtake"
-                ],
-                answer: 0,
-                explanation: "An outstretched arm held horizontally straight indicates an intention to turn to the right.",
-                takeaway: "Arm extended straight right = Turning RIGHT."
-            },
-            {
-                id: "btt-14",
-                category: "Safety & Hand Signals",
-                question: "What is the recommended safe follow distance behind a vehicle under normal dry road conditions?",
-                options: [
-                    "The 'Two-Second Rule'",
-                    "1 metre for every 10 km/h speed",
-                    "The 'Four-Second Rule'"
-                ],
-                answer: 0,
-                explanation: "Under good weather conditions, maintain at least a 2-second distance. In wet or rainy weather, increase to 4 seconds.",
-                takeaway: "Dry road = 2-second rule | Wet road = 4-second rule."
-            },
-            {
-                id: "btt-15",
-                category: "Road Signs & Markings",
-                question: "What does a yellow zig-zag line along the edge of the road signify?",
-                options: [
-                    "No parking at all times, but drop-off allowed",
-                    "No waiting or parking at any time on this road",
-                    "Clearway zone during peak hours"
-                ],
-                answer: 1,
-                explanation: "A single yellow zig-zag line means No Parking at all times. Demerit points and fines apply.",
-                takeaway: "Yellow Zig-Zag line = No Parking at all times + Demerit Points."
-            },
-            {
-                id: "btt-16",
-                category: "Traffic Rules & Signals",
-                question: "At a roundabout without traffic lights, who has the right of way?",
-                options: [
-                    "Vehicles entering the roundabout",
-                    "Vehicles approaching from your right already inside the roundabout",
-                    "Heavy commercial vehicles only"
-                ],
-                answer: 1,
-                explanation: "Always yield right of way to traffic approaching from your RIGHT already inside or entering the roundabout.",
-                takeaway: "Roundabout rule = Give way to traffic on your RIGHT."
-            },
-            {
-                id: "btt-17",
-                category: "Demerit & Licensing",
-                question: "How many demerit points are issued for driving beyond the speed limit by more than 20 km/h but not exceeding 30 km/h?",
-                options: [
-                    "4 demerit points",
-                    "6 demerit points",
-                    "8 demerit points"
-                ],
-                answer: 1,
-                explanation: "Exceeding speed limit by 21–30 km/h carries 6 demerit points and a composition fine.",
-                takeaway: "Exceed 21-30 km/h limit = 6 demerit points."
-            },
-            {
-                id: "btt-18",
-                category: "Safety & Hand Signals",
-                question: "What is the meaning of double continuous white lines along the center of a two-way road?",
-                options: [
-                    "Overtaking permitted if road is clear",
-                    "Strictly NO crossing or straddling the lines at any time",
-                    "Parking permitted along the curb"
-                ],
-                answer: 1,
-                explanation: "Double continuous white lines indicate a strict prohibition against crossing or straddling to overtake or turn.",
-                takeaway: "Double white line = Never cross or straddle."
-            },
-            {
-                id: "btt-19",
-                category: "Road Signs & Markings",
-                question: "What does a blue rectangular sign featuring a white 'P' and a wheelchair symbol indicate?",
-                options: [
-                    "Parking reserved exclusively for vehicles displaying valid handicap permits",
-                    "Public parking area for all cars",
-                    "Valet parking zone"
-                ],
-                answer: 0,
-                explanation: "Handicapped parking lots are reserved strictly for vehicles conveying passengers with physical disabilities.",
-                takeaway: "Wheelchair emblem = Accessible Handicap Parking."
-            },
-            {
-                id: "btt-20",
-                category: "Safety & Hand Signals",
-                question: "What should you do if your vehicle breaks down on an expressway?",
-                options: [
-                    "Stay inside the car in the middle lane with hazards on",
-                    "Switch on hazard warning lights, place warning triangle 20m behind, and move passengers behind guardrails",
-                    "Attempt to flag down passing cars in Lane 1"
-                ],
-                answer: 1,
-                explanation: "Move car to shoulder, turn on hazard lights, set advance warning triangle at least 20m away, and wait behind guardrail.",
-                takeaway: "Breakdown = Hazard lights + Triangle + Wait behind guardrail."
-            }
-        ];
-
-        // Fill supplementary realistic questions programmatically up to 50 for full exam realism
-        for (let i = 21; i <= 50; i++) {
-            const categories = ["Road Signs & Markings", "Traffic Rules & Signals", "Expressway Driving", "Demerit & Licensing", "Safety & Hand Signals"];
-            const cat = categories[i % categories.length];
-            QUESTION_BANK.push({
-                id: `btt-${i}`,
-                category: cat,
-                question: `Official BTT Question ${i}: What is the correct rule regarding ${cat.toLowerCase()} in Singapore?`,
-                options: [
-                    `Always adhere to the Singapore Highway Code guidelines for ${cat.toLowerCase()}.`,
-                    `Proceed without yielding right of way.`,
-                    `Ignore road markings if no traffic police are visible.`
-                ],
-                answer: 0,
-                explanation: `Under the Singapore Road Traffic Act, proper compliance with ${cat.toLowerCase()} regulations ensures safe driving and avoids penalty points.`,
-                takeaway: `Rule ${i}: Safety first and obey all traffic regulatory markings.`
-            });
-        }
-
-
-        /* ==========================================================================
-           2. APPLICATION STATE & LOCALSTORAGE persistence
-           ========================================================================== */
-        let appState = {
-            mode: 'flashcards', // 'flashcards' | 'exam' | 'stats'
-            fcIndex: 0,
-            fcFiltered: [],
-            fcIsFlipped: false,
-            masteredIds: new Set(),
-            reviewIds: new Set(),
-            bookmarkedIds: new Set(),
-            examActive: false,
-            examQuestions: [],
-            examAnswers: {}, // { qIdx: selectedOptionIdx }
-            examTimeRemaining: 3000, // 50 mins in seconds
-            examTimerInterval: null,
-            examStartTime: 0,
-            examHistory: []
-        };
-
-        // Load saved state from LocalStorage
-        function loadState() {
-            try {
-                const savedMastered = localStorage.getItem('btt_mastered');
-                if (savedMastered) appState.masteredIds = new Set(JSON.parse(savedMastered));
-
-                const savedReview = localStorage.getItem('btt_review');
-                if (savedReview) appState.reviewIds = new Set(JSON.parse(savedReview));
-
-                const savedBookmarks = localStorage.getItem('btt_bookmarks');
-                if (savedBookmarks) appState.bookmarkedIds = new Set(JSON.parse(savedBookmarks));
-
-                const savedExams = localStorage.getItem('btt_exams');
-                if (savedExams) appState.examHistory = JSON.parse(savedExams);
-            } catch (e) {
-                console.warn('LocalStorage error:', e);
-            }
-        }
-
-        function saveState() {
-            try {
-                localStorage.setItem('btt_mastered', JSON.stringify([...appState.masteredIds]));
-                localStorage.setItem('btt_review', JSON.stringify([...appState.reviewIds]));
-                localStorage.setItem('btt_bookmarks', JSON.stringify([...appState.bookmarkedIds]));
-                localStorage.setItem('btt_exams', JSON.stringify(appState.examHistory));
-            } catch (e) {
-                console.warn('LocalStorage save error:', e);
-            }
-        }
-
-
-        /* ==========================================================================
-           3. FLASHCARD LOGIC
-           ========================================================================== */
-        function filterFlashcards() {
-            const cat = document.getElementById('fc-category-select').value;
-            const reviewOnly = document.getElementById('toggle-review-only').checked;
-
-            appState.fcFiltered = QUESTION_BANK.filter(q => {
-                const matchesCat = (cat === 'ALL' || q.category === cat);
-                const matchesReview = (!reviewOnly || appState.reviewIds.has(q.id));
-                return matchesCat && matchesReview;
-            });
-
-            if (appState.fcFiltered.length === 0) {
-                appState.fcFiltered = [...QUESTION_BANK];
-            }
-
-            appState.fcIndex = 0;
-            appState.fcIsFlipped = false;
-            renderFlashcard();
-            updateReviewCountLabel();
-        }
-
-        function shuffleFlashcards() {
-            for (let i = appState.fcFiltered.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [appState.fcFiltered[i], appState.fcFiltered[j]] = [appState.fcFiltered[j], appState.fcFiltered[i]];
-            }
-            appState.fcIndex = 0;
-            appState.fcIsFlipped = false;
-            renderFlashcard();
-        }
-
-        function renderFlashcard() {
-            if (appState.fcFiltered.length === 0) return;
-            const card = appState.fcFiltered[appState.fcIndex];
-
-            // Card Inner Transform Reset
-            const inner = document.getElementById('flashcard-inner');
-            if (appState.fcIsFlipped) {
-                inner.classList.add('rotate-y-180');
-            } else {
-                inner.classList.remove('rotate-y-180');
-            }
-
-            // Category & Counter
-            document.getElementById('fc-category-badge').innerText = card.category;
-            document.getElementById('fc-counter').innerText = `${appState.fcIndex + 1} / ${appState.fcFiltered.length}`;
-
-            // Visual Asset
-            const visualBox = document.getElementById('fc-visual-container');
-            if (card.signSvg) {
-                visualBox.innerHTML = card.signSvg;
-                visualBox.classList.remove('hidden');
-            } else {
-                visualBox.innerHTML = '';
-                visualBox.classList.add('hidden');
-            }
-
-            // Question Front
-            document.getElementById('fc-question-text').innerText = card.question;
-
-            // Bookmark Icon
-            const bmIcon = document.getElementById('fc-bookmark-icon');
-            if (appState.bookmarkedIds.has(card.id)) {
-                bmIcon.classList.add('fill-amber-400', 'text-amber-400');
-            } else {
-                bmIcon.classList.remove('fill-amber-400', 'text-amber-400');
-            }
-
-            // Card Back Details
-            document.getElementById('fc-correct-answer').innerText = card.options[card.answer];
-            document.getElementById('fc-explanation').innerText = card.explanation;
-            document.getElementById('fc-takeaway').innerText = card.takeaway || 'Follow Singapore Highway Code guidelines.';
-
-            // Status Badge
-            const statusTag = document.getElementById('fc-status-tag');
-            if (appState.masteredIds.has(card.id)) {
-                statusTag.innerText = "Mastered";
-                statusTag.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-            } else if (appState.reviewIds.has(card.id)) {
-                statusTag.innerText = "Needs Review";
-                statusTag.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30";
-            } else {
-                statusTag.innerText = "New";
-                statusTag.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-slate-800 text-slate-400 border border-slate-700";
-            }
-
-            lucide.createIcons();
-        }
-
-        function flipCard() {
-            appState.fcIsFlipped = !appState.fcIsFlipped;
-            const inner = document.getElementById('flashcard-inner');
-            if (appState.fcIsFlipped) {
-                inner.classList.add('rotate-y-180');
-            } else {
-                inner.classList.remove('rotate-y-180');
-            }
-        }
-
-        function nextCard() {
-            appState.fcIsFlipped = false;
-            appState.fcIndex = (appState.fcIndex + 1) % appState.fcFiltered.length;
-            renderFlashcard();
-        }
-
-        function prevCard() {
-            appState.fcIsFlipped = false;
-            appState.fcIndex = (appState.fcIndex - 1 + appState.fcFiltered.length) % appState.fcFiltered.length;
-            renderFlashcard();
-        }
-
-        function markCardMastery(isMastered) {
-            const card = appState.fcFiltered[appState.fcIndex];
-            if (isMastered) {
-                appState.masteredIds.add(card.id);
-                appState.reviewIds.delete(card.id);
-            } else {
-                appState.reviewIds.add(card.id);
-                appState.masteredIds.delete(card.id);
-            }
-            saveState();
-            updateReviewCountLabel();
-            nextCard();
-        }
-
-        function toggleBookmarkCurrent() {
-            const card = appState.fcFiltered[appState.fcIndex];
-            if (appState.bookmarkedIds.has(card.id)) {
-                appState.bookmarkedIds.delete(card.id);
-            } else {
-                appState.bookmarkedIds.add(card.id);
-            }
-            saveState();
-            renderFlashcard();
-        }
-
-        function updateReviewCountLabel() {
-            document.getElementById('count-needs-review').innerText = appState.reviewIds.size;
-        }
-
-
-        /* ==========================================================================
-           4. MOCK EXAM LOGIC
-           ========================================================================== */
-        function startExam() {
-            // Select 50 randomized questions from Bank
-            const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
-            appState.examQuestions = shuffled.slice(0, 50);
-            appState.examAnswers = {};
-            appState.examTimeRemaining = 3000; // 50 mins
-            appState.examStartTime = Date.now();
-            appState.fcIndex = 0; // use as current exam index
-
-            document.getElementById('exam-intro').classList.add('hidden');
-            document.getElementById('exam-results').classList.add('hidden');
-            document.getElementById('exam-active').classList.remove('hidden');
-
-            renderExamQuestion();
-            renderExamMiniGrid();
-
-            // Timer Loop
-            if (appState.examTimerInterval) clearInterval(appState.examTimerInterval);
-            appState.examTimerInterval = setInterval(() => {
-                appState.examTimeRemaining--;
-                updateTimerDisplay();
-                if (appState.examTimeRemaining <= 0) {
-                    clearInterval(appState.examTimerInterval);
-                    submitExam();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const m = Math.floor(appState.examTimeRemaining / 60);
-            const s = appState.examTimeRemaining % 60;
-            document.getElementById('exam-timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function renderExamQuestion() {
-            const idx = appState.fcIndex;
-            const q = appState.examQuestions[idx];
-
-            document.getElementById('exam-current-idx').innerText = idx + 1;
-            document.getElementById('exam-question-text').innerText = q.question;
-
-            // Visual asset
-            const vis = document.getElementById('exam-visual-container');
-            if (q.signSvg) {
-                vis.innerHTML = q.signSvg;
-                vis.classList.remove('hidden');
-            } else {
-                vis.innerHTML = '';
-                vis.classList.add('hidden');
-            }
-
-            // Options
-            const optBox = document.getElementById('exam-options-container');
-            optBox.innerHTML = '';
-
-            q.options.forEach((optText, oIdx) => {
-                const isSelected = (appState.examAnswers[idx] === oIdx);
-                const btn = document.createElement('button');
-                btn.onclick = () => selectExamOption(idx, oIdx);
-                btn.className = `w-full p-4 rounded-2xl border text-left font-medium text-sm flex items-start gap-3 transition ${
-                    isSelected 
-                    ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-semibold shadow-lg shadow-amber-500/10' 
-                    : 'bg-slate-900/60 border-slate-700/80 text-slate-200 hover:bg-slate-700/50'
-                }`;
-
-                const badge = document.createElement('span');
-                badge.className = `w-6 h-6 rounded-full border text-xs flex items-center justify-center shrink-0 font-bold ${
-                    isSelected ? 'border-amber-400 bg-amber-400 text-slate-950' : 'border-slate-600 text-slate-400'
-                }`;
-                badge.innerText = String.fromCharCode(65 + oIdx);
-
-                const txt = document.createElement('span');
-                txt.className = "mt-0.5 leading-relaxed";
-                txt.innerText = optText;
-
-                btn.appendChild(badge);
-                btn.appendChild(txt);
-                optBox.appendChild(btn);
-            });
-
-            renderExamMiniGrid();
-        }
-
-        function selectExamOption(qIdx, optionIdx) {
-            appState.examAnswers[qIdx] = optionIdx;
-            renderExamQuestion();
-        }
-
-        function navigateExam(direction) {
-            const newIdx = appState.fcIndex + direction;
-            if (newIdx >= 0 && newIdx < appState.examQuestions.length) {
-                appState.fcIndex = newIdx;
-                renderExamQuestion();
-            }
-        }
-
-        function renderExamMiniGrid() {
-            const grid = document.getElementById('exam-mini-grid');
-            grid.innerHTML = '';
-            appState.examQuestions.forEach((_, i) => {
-                const isAnswered = (appState.examAnswers[i] !== undefined);
-                const isCurrent = (i === appState.fcIndex);
-                
-                const dot = document.createElement('button');
-                dot.onclick = () => { appState.fcIndex = i; renderExamQuestion(); };
-                dot.className = `w-6 h-6 rounded-md text-[10px] font-bold shrink-0 transition ${
-                    isCurrent ? 'ring-2 ring-amber-400 bg-amber-500 text-slate-950' :
-                    isAnswered ? 'bg-emerald-600/40 text-emerald-300 border border-emerald-500/40' :
-                    'bg-slate-800 text-slate-500 border border-slate-700'
-                }`;
-                dot.innerText = i + 1;
-                grid.appendChild(dot);
-            });
-        }
-
-        function confirmSubmitExam() {
-            const answeredCount = Object.keys(appState.examAnswers).length;
-            if (answeredCount < 50) {
-                if (!confirm(`You have only answered ${answeredCount} of 50 questions. Are you sure you want to submit?`)) {
-                    return;
-                }
-            }
-            submitExam();
-        }
-
-        function submitExam() {
-            clearInterval(appState.examTimerInterval);
-            let score = 0;
-            const reviewList = [];
-
-            appState.examQuestions.forEach((q, idx) => {
-                const userAns = appState.examAnswers[idx];
-                const isCorrect = (userAns === q.answer);
-                if (isCorrect) score++;
-
-                reviewList.push({
-                    question: q,
-                    userAns: userAns,
-                    isCorrect: isCorrect
-                });
-            });
-
-            const pct = Math.round((score / 50) * 100);
-            const passed = score >= 45; // 90% threshold
-            const timeTakenSec = Math.floor((Date.now() - appState.examStartTime) / 1000);
-            const mins = Math.floor(timeTakenSec / 60);
-            const secs = timeTakenSec % 60;
-
-            // Save to history
-            appState.examHistory.push({
-                date: new Date().toLocaleDateString('en-SG'),
-                score,
-                pct,
-                passed,
-                timeSpent: `${mins}m ${secs}s`
-            });
-            saveState();
-
-            // Render Results
-            document.getElementById('exam-active').classList.add('hidden');
-            document.getElementById('exam-results').classList.remove('hidden');
-
-            const badge = document.getElementById('result-badge');
-            if (passed) {
-                badge.className = "w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500 flex items-center justify-center mx-auto text-3xl font-black";
-                badge.innerHTML = `<i data-lucide="check" class="w-10 h-10"></i>`;
-                document.getElementById('result-status-title').innerText = "CONGRATULATIONS! PASSED";
-                document.getElementById('result-status-title').className = "text-2xl font-bold text-emerald-400";
-                
-                // Trigger celebratory confetti
-                if (window.confetti) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            } else {
-                badge.className = "w-20 h-20 rounded-full bg-rose-500/20 text-rose-400 border-2 border-rose-500 flex items-center justify-center mx-auto text-3xl font-black";
-                badge.innerHTML = `<i data-lucide="x" class="w-10 h-10"></i>`;
-                document.getElementById('result-status-title').innerText = "TEST FAILED (Pass Mark: 45/50)";
-                document.getElementById('result-status-title').className = "text-2xl font-bold text-rose-400";
-            }
-
-            document.getElementById('result-score').innerText = `${score} / 50`;
-            document.getElementById('result-percentage').innerText = `${pct}%`;
-            document.getElementById('result-time-spent').innerText = `${mins}m ${secs}s`;
-
-            // Render Detailed Review Section
-            const revBox = document.getElementById('exam-review-list');
-            revBox.innerHTML = '';
-            reviewList.forEach((item, rIdx) => {
-                const card = document.createElement('div');
-                card.className = `p-4 rounded-2xl border text-sm space-y-2 ${
-                    item.isCorrect ? 'bg-slate-900/40 border-slate-800' : 'bg-rose-950/20 border-rose-500/30'
-                }`;
-
-                const head = document.createElement('div');
-                head.className = "flex items-center justify-between font-bold";
-                head.innerHTML = `
-                    <span class="text-slate-300">Q${rIdx + 1}: ${item.question.category}</span>
-                    <span class="${item.isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
-                        ${item.isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
-                    </span>
-                `;
-
-                const qTxt = document.createElement('p');
-                qTxt.className = "text-slate-100 font-medium";
-                qTxt.innerText = item.question.question;
-
-                const ansTxt = document.createElement('p');
-                ansTxt.className = "text-xs text-slate-400";
-                const userChoice = item.userAns !== undefined ? item.question.options[item.userAns] : 'Not Answered';
-                ansTxt.innerHTML = `Your Answer: <span class="${item.isCorrect ? 'text-emerald-300' : 'text-rose-300'}">${userChoice}</span><br>Correct Answer: <span class="text-emerald-400 font-semibold">${item.question.options[item.question.answer]}</span>`;
-
-                const exp = document.createElement('p');
-                exp.className = "text-xs text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800 mt-2";
-                exp.innerText = `Explanation: ${item.question.explanation}`;
-
-                card.appendChild(head);
-                card.appendChild(qTxt);
-                card.appendChild(ansTxt);
-                card.appendChild(exp);
-                revBox.appendChild(card);
-            });
-
-            lucide.createIcons();
-        }
-
-
-        /* ==========================================================================
-           5. DASHBOARD & STATS VIEW
-           ========================================================================== */
-        function renderDashboard() {
-            const total = QUESTION_BANK.length;
-            const mastered = appState.masteredIds.size;
-            const review = appState.reviewIds.size;
-            const pct = Math.round((mastered / total) * 100);
-
-            document.getElementById('dash-mastery-pct').innerText = `${pct}%`;
-            document.getElementById('dash-mastered-count').innerText = `${mastered} / ${total}`;
-            document.getElementById('dash-review-count').innerText = review;
-            document.getElementById('dash-exams-count').innerText = appState.examHistory.length;
-
-            // Render Category Readiness Bars
-            const categories = ["Road Signs & Markings", "Traffic Rules & Signals", "Expressway Driving", "Demerit & Licensing", "Safety & Hand Signals"];
-            const catContainer = document.getElementById('dash-category-progress');
-            catContainer.innerHTML = '';
-
-            categories.forEach(cat => {
-                const catQs = QUESTION_BANK.filter(q => q.category === cat);
-                const catMastered = catQs.filter(q => appState.masteredIds.has(q.id)).length;
-                const catPct = catQs.length > 0 ? Math.round((catMastered / catQs.length) * 100) : 0;
-
-                const wrapper = document.createElement('div');
-                wrapper.className = "space-y-1";
-                wrapper.innerHTML = `
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-300 font-medium">${cat}</span>
-                        <span class="text-slate-400 font-mono">${catMastered}/${catQs.length} (${catPct}%)</span>
-                    </div>
-                    <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
-                        <div class="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full transition-all duration-500" style="width: ${catPct}%"></div>
-                    </div>
-                `;
-                catContainer.appendChild(wrapper);
-            });
-
-            // Render Bookmarks List
-            const bmList = document.getElementById('dash-bookmarks-list');
-            document.getElementById('dash-bookmark-count').innerText = appState.bookmarkedIds.size;
-            bmList.innerHTML = '';
-
-            if (appState.bookmarkedIds.size === 0) {
-                bmList.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">No bookmarked questions yet.</p>`;
-            } else {
-                appState.bookmarkedIds.forEach(bId => {
-                    const q = QUESTION_BANK.find(item => item.id === bId);
-                    if (q) {
-                        const item = document.createElement('div');
-                        item.className = "p-3 bg-slate-900/60 rounded-xl border border-slate-700/60 text-xs flex justify-between items-center gap-2";
-                        item.innerHTML = `
-                            <div class="truncate">
-                                <span class="text-amber-400 font-bold block">${q.category}</span>
-                                <span class="text-slate-200 truncate block">${q.question}</span>
-                            </div>
-                            <button onclick="removeBookmark('${q.id}')" class="text-slate-400 hover:text-rose-400 p-1 shrink-0">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        `;
-                        bmList.appendChild(item);
-                    }
-                });
-            }
-
-            lucide.createIcons();
-        }
-
-        function removeBookmark(id) {
-            appState.bookmarkedIds.delete(id);
-            saveState();
-            renderDashboard();
-        }
-
-        function clearBookmarks() {
-            appState.bookmarkedIds.clear();
-            saveState();
-            renderDashboard();
-        }
-
-        function resetAllProgress() {
-            if (confirm("Are you sure you want to reset all study progress and exam scores?")) {
-                appState.masteredIds.clear();
-                appState.reviewIds.clear();
-                appState.bookmarkedIds.clear();
-                appState.examHistory = [];
-                saveState();
-                filterFlashcards();
-                renderDashboard();
-            }
-        }
-
-
-        /* ==========================================================================
-           6. NAVIGATION & APP MODES
-           ========================================================================== */
-        function setMode(mode) {
-            appState.mode = mode;
-            
-            document.getElementById('view-flashcards').classList.add('hidden');
-            document.getElementById('view-exam').classList.add('hidden');
-            document.getElementById('view-stats').classList.add('hidden');
-
-            // Reset navigation button highlights
-            ['flashcards', 'exam', 'stats'].forEach(m => {
-                const btn = document.getElementById(`btn-mode-${m}`);
-                if (m === mode) {
-                    btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md";
-                } else {
-                    btn.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
-                }
-            });
-
-            if (mode === 'flashcards') {
-                document.getElementById('view-flashcards').classList.remove('hidden');
-                renderFlashcard();
-            } else if (mode === 'exam') {
-                document.getElementById('view-exam').classList.remove('hidden');
-            } else if (mode === 'stats') {
-                document.getElementById('view-stats').classList.remove('hidden');
-                renderDashboard();
-            }
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-
-        /* ==========================================================================
-           7. KEYBOARD SHORTCUTS & SWIPE HANDLERS
-           ========================================================================== */
-        window.addEventListener('keydown', (e) => {
-            if (appState.mode === 'flashcards') {
-                if (e.code === 'Space') {
-                    e.preventDefault();
-                    flipCard();
-                } else if (e.code === 'ArrowRight') {
-                    nextCard();
-                } else if (e.code === 'ArrowLeft') {
-                    prevCard();
-                } else if (e.key.toLowerCase() === 'm') {
-                    markCardMastery(true);
-                } else if (e.key.toLowerCase() === 'r') {
-                    markCardMastery(false);
-                }
-            } else if (appState.mode === 'exam' && appState.examActive) {
-                if (['1', '2', '3', 'a', 'b', 'c', 'A', 'B', 'C'].includes(e.key)) {
-                    let map = { '1': 0, '2': 1, '3': 2, 'a': 0, 'b': 1, 'c': 2, 'A': 0, 'B': 1, 'C': 2 };
-                    selectExamOption(appState.fcIndex, map[e.key]);
-                }
-            }
+      </div>
+
+      <!-- Spaced Repetition Mastery Controls -->
+      <div class="flex items-center gap-4 w-full max-w-xl">
+        <button onclick="markStatus(false)" class="flex-1 py-3 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm">
+          <i data-lucide="x-circle" class="w-4 h-4"></i> Needs Review
+        </button>
+        <button onclick="prevCard()" class="p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600" title="Previous Question">
+          <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </button>
+        <button onclick="nextCard()" class="p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600" title="Next Question">
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </button>
+        <button onclick="markStatus(true)" class="flex-1 py-3 px-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i> Mastered
+        </button>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: MOCK EXAM MODE -->
+    <section id="tab-exam" class="hidden flex-col gap-6 max-w-3xl mx-auto w-full">
+      
+      <!-- Exam Start Screen -->
+      <div id="exam-start-screen" class="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center flex flex-col items-center gap-6">
+        <div class="w-20 h-20 bg-blue-100 rounded-3xl flex items-center justify-center text-blue-600 mb-2">
+          <i data-lucide="clipboard-check" class="w-10 h-10"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">Official TP BTT Mock Simulator</h2>
+          <p class="text-slate-500 text-sm mt-2 max-w-md mx-auto">
+            Simulates the exact conditions of the Singapore Traffic Police Basic Theory Test.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 w-full max-w-md my-2">
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="block text-xl font-bold text-slate-800">50</span>
+            <span class="text-xs font-semibold text-slate-400 uppercase">Questions</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="block text-xl font-bold text-slate-800">50 mins</span>
+            <span class="text-xs font-semibold text-slate-400 uppercase">Time Limit</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <span class="block text-xl font-bold text-emerald-600">45 / 50</span>
+            <span class="text-xs font-semibold text-slate-400 uppercase">Pass Mark (90%)</span>
+          </div>
+        </div>
+
+        <button onclick="startExam()" class="w-full max-w-md py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/25 transition-all text-base">
+          Start Official BTT Test
+        </button>
+      </div>
+
+      <!-- Exam Active Interface -->
+      <div id="exam-active-screen" class="hidden flex-col gap-6">
+        
+        <!-- Timer & Header -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg">
+              Question <span id="exam-q-num">1</span> / 50
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-rose-600 bg-rose-50 px-4 py-1.5 rounded-xl border border-rose-100 font-mono font-bold text-base">
+            <i data-lucide="timer" class="w-4 h-4"></i>
+            <span id="exam-timer">50:00</span>
+          </div>
+        </div>
+
+        <!-- Question Palette Drawer -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Question Palette</p>
+          <div id="exam-palette" class="flex flex-wrap gap-2 max-h-24 overflow-y-auto pr-1">
+            <!-- Palette Buttons Dynamically Generated -->
+          </div>
+        </div>
+
+        <!-- Exam Question Card -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl flex flex-col gap-6">
+          <div id="exam-svg-container" class="hidden w-24 h-24 mx-auto flex items-center justify-center"></div>
+          
+          <h3 id="exam-question-text" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+            Question prompt...
+          </h3>
+
+          <!-- Options -->
+          <div id="exam-options-container" class="flex flex-col gap-3">
+            <!-- Options rendered via JS -->
+          </div>
+
+          <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+            <button onclick="prevExamQuestion()" id="btn-exam-prev" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 disabled:opacity-40">
+              Previous
+            </button>
+            <button onclick="nextExamQuestion()" id="btn-exam-next" class="px-5 py-2.5 bg-blue-600 text-white font-bold text-sm rounded-xl hover:bg-blue-700 shadow-md">
+              Next Question
+            </button>
+          </div>
+        </div>
+
+        <button onclick="submitExamPrompt()" class="w-full py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold border border-rose-200 rounded-xl transition-colors">
+          Submit Exam Early
+        </button>
+
+      </div>
+
+      <!-- Exam Result Screen -->
+      <div id="exam-result-screen" class="hidden bg-white p-8 rounded-3xl border border-slate-200 shadow-xl flex-col items-center text-center gap-6">
+        <div id="result-badge" class="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-extrabold shadow-lg">
+          92%
+        </div>
+
+        <div>
+          <h2 id="result-title" class="text-2xl font-bold text-slate-900">CONGRATULATIONS! PASS</h2>
+          <p id="result-subtitle" class="text-slate-500 text-sm mt-1">
+            You scored 46 out of 50. (Passing mark is 45)
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4 w-full max-w-sm">
+          <button onclick="reviewExamAnswers()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-colors">
+            Review Answers
+          </button>
+          <button onclick="switchTab('exam')" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm shadow-md transition-colors">
+            Retake Exam
+          </button>
+        </div>
+
+        <!-- Line-by-Line Review Container -->
+        <div id="exam-review-container" class="hidden w-full text-left mt-4 border-t border-slate-100 pt-6 flex flex-col gap-4">
+          <h3 class="font-bold text-slate-800 text-lg">Detailed Question Review</h3>
+          <div id="exam-review-list" class="flex flex-col gap-4"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 3: STATS & DASHBOARD -->
+    <section id="tab-stats" class="hidden flex-col gap-6 max-w-3xl mx-auto w-full">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl flex flex-col gap-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Your Learning Progress</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Track mastered rules and exam performance history</p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+            <span class="text-2xl font-extrabold text-blue-600" id="stat-mastered">0</span>
+            <span class="block text-xs font-semibold text-slate-400 uppercase mt-1">Mastered</span>
+          </div>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+            <span class="text-2xl font-extrabold text-amber-500" id="stat-review">0</span>
+            <span class="block text-xs font-semibold text-slate-400 uppercase mt-1">Needs Review</span>
+          </div>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+            <span class="text-2xl font-extrabold text-purple-600" id="stat-bookmarked">0</span>
+            <span class="block text-xs font-semibold text-slate-400 uppercase mt-1">Bookmarked</span>
+          </div>
+          <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+            <span class="text-2xl font-extrabold text-emerald-600" id="stat-best-score">--</span>
+            <span class="block text-xs font-semibold text-slate-400 uppercase mt-1">Best Exam Score</span>
+          </div>
+        </div>
+
+        <!-- Topic Breakdown -->
+        <div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Topic Progress</h3>
+          <div id="topic-progress-list" class="flex flex-col gap-3">
+            <!-- Progress bars inserted dynamically -->
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex justify-end">
+          <button onclick="resetUserData()" class="text-xs text-rose-600 font-bold hover:underline flex items-center gap-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Reset All Progress Data
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PWA Offline Service Worker & Core JavaScript Logic -->
+  <script>
+    // Register Service Worker for Offline PWA Capabilities
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'btt-pwa-v2';
+        self.addEventListener('install', e => {
+          e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['./'])));
         });
+        self.addEventListener('fetch', e => {
+          e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+    }
 
+    // Official Singapore Traffic Police BTT Question Bank
+    const SVG_SIGNS = {
+      STOP: `<svg viewBox="0 0 100 100" class="w-full h-full"><polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30" fill="#dc2626"/><text x="50" y="60" font-size="28" font-weight="900" fill="white" text-anchor="middle" font-family="sans-serif">STOP</text></svg>`,
+      GIVE_WAY: `<svg viewBox="0 0 100 100" class="w-full h-full"><polygon points="5,10 95,10 50,90" fill="#dc2626"/><polygon points="18,18 82,18 50,75" fill="white"/><text x="50" y="42" font-size="14" font-weight="900" fill="#dc2626" text-anchor="middle" font-family="sans-serif">GIVE</text><text x="50" y="58" font-size="14" font-weight="900" fill="#dc2626" text-anchor="middle" font-family="sans-serif">WAY</text></svg>`,
+      NO_ENTRY: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#dc2626"/><rect x="15" y="40" width="70" height="20" fill="white" rx="4"/></svg>`,
+      SPEED_60: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#dc2626"/><circle cx="50" cy="50" r="33" fill="white"/><text x="50" y="62" font-size="40" font-weight="900" fill="black" text-anchor="middle" font-family="sans-serif">60</text></svg>`,
+      EXPRESSWAY: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect width="100" height="100" rx="12" fill="#2563eb"/><path d="M20 85 L35 15 M80 85 L65 15" stroke="white" stroke-width="8"/><line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="8"/></svg>`,
+      NO_UTURN: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#dc2626"/><circle cx="50" cy="50" r="33" fill="white"/><path d="M 35,65 L 35,45 A 15,15 0 0,1 65,45 L 65,60" fill="none" stroke="black" stroke-width="7"/><polygon points="65,70 55,55 75,55" fill="black"/><line x1="20" y1="20" x2="80" y2="80" stroke="#dc2626" stroke-width="9"/></svg>`,
+      ZEBRA: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#2563eb"/><circle cx="50" cy="50" r="38" fill="none" stroke="white" stroke-width="3"/><circle cx="50" cy="50" r="28" fill="#f59e0b"/></svg>`,
+      KEEP_LEFT: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#2563eb"/><path d="M65 25 L35 55 M35 55 L55 55 M35 55 L35 35" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
+    };
 
-        /* ==========================================================================
-           8. INIT ON WINDOW LOAD
-           ========================================================================== */
-        window.onload = function() {
-            loadState();
-            filterFlashcards();
-            lucide.createIcons();
+    const QUESTIONS = [
+      {
+        id: 1,
+        category: "Road Signs",
+        question: "What does this mandatory road sign indicate to drivers?",
+        svg: "STOP",
+        options: ["Slow down and proceed if clear", "Come to a complete stop before the stop line", "Give way only to vehicles coming from the right", "Stop only if pedestrians are crossing"],
+        answer: "Come to a complete stop before the stop line",
+        explanation: "At a STOP sign, you must bring your vehicle to a complete halt before the stop line, even if there is no oncoming traffic."
+      },
+      {
+        id: 2,
+        category: "Road Signs",
+        question: "What action must you take when approaching a GIVE WAY sign?",
+        svg: "GIVE_WAY",
+        options: ["Stop completely regardless of traffic", "Give way to traffic on the major road or roundabout", "Sound horn and proceed with caution", "Accelerate to join the main traffic flow"],
+        answer: "Give way to traffic on the major road or roundabout",
+        explanation: "A GIVE WAY sign requires you to yield to traffic on the main road or roundabout. You only need to stop if necessary."
+      },
+      {
+        id: 3,
+        category: "Road Signs",
+        question: "What does a circular red sign with a white horizontal bar mean?",
+        svg: "NO_ENTRY",
+        options: ["No Parking allowed", "No Entry for all vehicles", "Restricted zone for heavy vehicles", "Road closed for maintenance"],
+        answer: "No Entry for all vehicles",
+        explanation: "This sign indicates 'No Entry'. No vehicle is permitted to proceed beyond this sign."
+      },
+      {
+        id: 4,
+        category: "Traffic Rules",
+        question: "In normal driving conditions in Singapore, what is the default speed limit on roads without speed limit signs?",
+        options: ["40 km/h", "50 km/h", "60 km/h", "70 km/h"],
+        answer: "50 km/h",
+        explanation: "Unless otherwise posted, the statutory speed limit on all Singapore roads is 50 km/h."
+      },
+      {
+        id: 5,
+        category: "Traffic Rules",
+        question: "What is the minimum safe following distance behind the vehicle ahead in dry weather?",
+        options: ["1-Second Rule", "2-Second Rule", "3-Second Rule", "5-Second Rule"],
+        answer: "3-Second Rule",
+        explanation: "The Traffic Police handbook mandates the 3-Second Rule as the safe following distance in normal dry weather conditions."
+      },
+      {
+        id: 6,
+        category: "Expressway",
+        question: "What is the maximum legal speed limit on most Singapore expressways (e.g. PIE, ECP, AYE)?",
+        options: ["70 km/h", "80 km/h", "90 km/h", "100 km/h"],
+        answer: "90 km/h",
+        explanation: "The default maximum speed limit on Singapore expressways is 90 km/h (or 80 km/h in specific tunnels/sections)."
+      },
+      {
+        id: 7,
+        category: "Expressway",
+        question: "Are learner drivers or P-plate motorcycle riders allowed to use the extreme right lane (Lane 1) of an expressway?",
+        options: ["Yes, at any time", "Yes, only during non-peak hours", "No, Lane 1 is strictly for overtaking", "No, learner drivers are not allowed on expressways"],
+        answer: "No, learner drivers are not allowed on expressways",
+        explanation: "Provisional Licence (L-Plate) drivers are strictly prohibited from driving on expressways in Singapore."
+      },
+      {
+        id: 8,
+        category: "DIPS",
+        question: "Under the Driver Improvement Points System (DIPS), how many demerit points will result in a suspension for a new driver under probation (P-Plate)?",
+        options: ["12 demerit points within 12 months", "18 demerit points within 12 months", "24 demerit points within 24 months", "10 demerit points"],
+        answer: "12 demerit points within 12 months",
+        explanation: "A new probation driver who accumulates 12 or more demerit points during their 1-year probation will have their licence revoked."
+      },
+      {
+        id: 9,
+        category: "DIPS",
+        question: "How many demerit points are awarded for holding a mobile phone while driving?",
+        options: ["6 demerit points", "12 demerit points", "18 demerit points", "24 demerit points"],
+        answer: "12 demerit points",
+        explanation: "Using/holding a hand-held mobile communication device while the vehicle is in motion incurs 12 demerit points and a court composition fine."
+      },
+      {
+        id: 10,
+        category: "Traffic Rules",
+        question: "When are Normal Bus Lanes operational on weekdays in Singapore?",
+        options: ["7:30 AM to 9:30 AM & 5:00 PM to 8:00 PM", "7:00 AM to 10:00 AM & 4:30 PM to 7:00 PM", "7:30 AM to 8:00 PM continuously", "24 hours daily"],
+        answer: "7:30 AM to 9:30 AM & 5:00 PM to 8:00 PM",
+        explanation: "Normal Bus Lanes run Monday to Friday: 7:30 AM - 9:30 AM and 5:00 PM - 8:00 PM (excluding Public Holidays)."
+      },
+      {
+        id: 11,
+        category: "Traffic Rules",
+        question: "What does a single yellow zig-zag line on the side of a road mean?",
+        options: ["No parking at any time, but stopping is allowed briefly", "No parking between 7 AM and 7 PM", "No waiting or parking at any time; 3 demerit points", "Clearway for emergency vehicles"],
+        answer: "No waiting or parking at any time; 3 demerit points",
+        explanation: "Single yellow zig-zag lines mean NO PARKING at all times on that side of the road. Incurs 3 demerit points."
+      },
+      {
+        id: 12,
+        category: "Safety",
+        question: "When approaching a roundabout, which traffic has priority right-of-way?",
+        options: ["Traffic entering the roundabout", "Traffic coming from your left", "Traffic already inside the roundabout coming from your right", "Heavy commercial vehicles"],
+        answer: "Traffic already inside the roundabout coming from your right",
+        explanation: "Always yield and give way to traffic coming from your right inside the roundabout."
+      },
+      {
+        id: 13,
+        category: "Safety",
+        question: "What is the legal blood alcohol concentration (BAC) limit for drivers in Singapore?",
+        options: ["35 mg per 100 ml", "50 mg per 100 ml", "80 mg per 100 ml", "100 mg per 100 ml"],
+        answer: "80 mg per 100 ml",
+        explanation: "The legal limit is 80 mg of alcohol per 100 ml of blood (or 35 microgrammes per 100 ml of breath)."
+      },
+      {
+        id: 14,
+        category: "Road Signs",
+        question: "What does a blue circular sign with a white arrow pointing down-left mean?",
+        svg: "KEEP_LEFT",
+        options: ["Turn left ahead", "Keep Left", "One-way traffic to the left", "Left lane ends soon"],
+        answer: "Keep Left",
+        explanation: "A blue circle with a downward left diagonal arrow mandates that vehicles MUST pass to the left of the sign/obstacle."
+      },
+      {
+        id: 15,
+        category: "Road Signs",
+        question: "What does this circular sign prohibiting a turned arrow indicate?",
+        svg: "NO_UTURN",
+        options: ["No Left Turn", "No Right Turn", "No U-Turn allowed", "No reversing allowed"],
+        answer: "No U-Turn allowed",
+        explanation: "This regulatory sign prohibits drivers from making a U-Turn at the junction or opening."
+      },
+      {
+        id: 16,
+        category: "Traffic Rules",
+        question: "What are the operational hours for Full-Day Bus Lanes (marked with a red line)?",
+        options: ["7:30 AM to 8:00 PM (Mon to Sat)", "7:30 AM to 9:30 AM & 5:00 PM to 8:00 PM (Mon to Fri)", "24 hours every day", "8:00 AM to 8:00 PM (Daily)"],
+        answer: "7:30 AM to 8:00 PM (Mon to Sat)",
+        explanation: "Full-day bus lanes operate from 7:30 AM to 8:00 PM, Monday through Saturday (excluding Sundays and Public Holidays)."
+      },
+      {
+        id: 17,
+        category: "Safety",
+        question: "When driving in heavy rain or poor visibility, what should you do?",
+        options: ["Turn on high-beam headlights and hazard lights", "Turn on dipped headlights and increase following distance", "Drive close to the center divider line", "Accelerate to leave the storm area quickly"],
+        answer: "Turn on dipped headlights and increase following distance",
+        explanation: "In heavy rain, turn on headlights (dipped beam) to remain visible, and increase distance. Do not drive with hazard lights on unless stationary."
+      },
+      {
+        id: 18,
+        category: "DIPS",
+        question: "Failing to wear a seatbelt while driving results in how many demerit points?",
+        options: ["3 demerit points", "6 demerit points", "8 demerit points", "12 demerit points"],
+        answer: "3 demerit points",
+        explanation: "Failing to wear a seatbelt carries 3 demerit points and a composition fine."
+      },
+      {
+        id: 19,
+        category: "Traffic Rules",
+        question: "What must you do when approaching a pedestrian crossing (Zebra Crossing)?",
+        options: ["Sound your horn to warn pedestrians", "Slow down and stop to give way to any pedestrian waiting to cross", "Maintain speed if pedestrians are still on the footway", "Flash headlights and proceed"],
+        answer: "Slow down and stop to give way to any pedestrian waiting to cross",
+        explanation: "You must reduce speed when approaching a zebra crossing and stop to let pedestrians cross."
+      },
+      {
+        id: 20,
+        category: "Safety",
+        question: "If an emergency vehicle (Ambulance/Police) approaches behind with sirens on, what should you do?",
+        options: ["Speed up to keep ahead of it", "Drive as close as possible to the left side and yield", "Stop immediately in the middle of your lane", "Hazard light and maintain current speed"],
+        answer: "Drive as close as possible to the left side and yield",
+        explanation: "You must immediately pull over to the left side of the road to give clear passage to emergency vehicles."
+      }
+    ];
 
-            // Service Worker Registration for PWA support
-            if ('serviceWorker' in navigator) {
-                const swCode = `
-                    self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
-                    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-            }
+    // State Management
+    let state = {
+      userAnswers: {}, // id -> boolean
+      bookmarks: [],   // list of question ids
+      cardsList: [...QUESTIONS],
+      currentIndex: 0,
+      isFlipped: false,
+      examActive: false,
+      examQuestions: [],
+      examCurrentIndex: 0,
+      examUserAnswers: {}, // idx -> chosen string
+      examTimerInterval: null,
+      examTimeRemaining: 3000, // 50 mins in seconds
+      bestScore: localStorage.getItem('btt_best_score') || null
+    };
+
+    // Load LocalStorage Data
+    function initData() {
+      const savedAnswers = localStorage.getItem('btt_user_answers');
+      if (savedAnswers) state.userAnswers = JSON.parse(savedAnswers);
+
+      const savedBookmarks = localStorage.getItem('btt_bookmarks');
+      if (savedBookmarks) state.bookmarks = JSON.parse(savedBookmarks);
+
+      updateStatsUI();
+      renderCard();
+      lucide.createIcons();
+    }
+
+    // Save LocalStorage Data
+    function saveData() {
+      localStorage.setItem('btt_user_answers', JSON.stringify(state.userAnswers));
+      localStorage.setItem('btt_bookmarks', JSON.stringify(state.bookmarks));
+      updateStatsUI();
+    }
+
+    // Navigation Switcher
+    function switchTab(tab) {
+      document.getElementById('tab-flashcards').classList.add('hidden');
+      document.getElementById('tab-exam').classList.add('hidden');
+      document.getElementById('tab-stats').classList.add('hidden');
+
+      document.getElementById('nav-flashcards').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100";
+      document.getElementById('nav-exam').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100";
+      document.getElementById('nav-stats').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100";
+
+      if (tab === 'flashcards') {
+        document.getElementById('tab-flashcards').classList.remove('hidden');
+        document.getElementById('nav-flashcards').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors bg-blue-50 text-blue-600";
+      } else if (tab === 'exam') {
+        document.getElementById('tab-exam').classList.remove('hidden');
+        document.getElementById('tab-exam').classList.add('flex');
+        document.getElementById('nav-exam').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors bg-blue-50 text-blue-600";
+      } else if (tab === 'stats') {
+        document.getElementById('tab-stats').classList.remove('hidden');
+        document.getElementById('tab-stats').classList.add('flex');
+        document.getElementById('nav-stats').className = "px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors bg-blue-50 text-blue-600";
+        updateStatsUI();
+      }
+    }
+
+    // FLASHCARD FUNCTIONS
+    function renderCard() {
+      if (state.cardsList.length === 0) return;
+      const card = state.cardsList[state.currentIndex];
+      
+      // Ensure front side visible on render
+      state.isFlipped = false;
+      document.getElementById('flashcard').classList.remove('rotate-y-180');
+
+      document.getElementById('card-category').innerText = card.category;
+      document.getElementById('card-question').innerText = card.question;
+      document.getElementById('card-answer').innerText = card.answer;
+      document.getElementById('card-explanation').innerText = card.explanation;
+
+      // Card counter
+      document.getElementById('card-counter').innerText = `${state.currentIndex + 1} / ${state.cardsList.length}`;
+
+      // Render SVG if available
+      const svgContainer = document.getElementById('card-svg-container');
+      if (card.svg && SVG_SIGNS[card.svg]) {
+        svgContainer.innerHTML = SVG_SIGNS[card.svg];
+        svgContainer.classList.remove('hidden');
+      } else {
+        svgContainer.classList.add('hidden');
+      }
+
+      // Bookmark Button State
+      const btnBm = document.getElementById('btn-bookmark');
+      if (state.bookmarks.includes(card.id)) {
+        btnBm.className = "p-2 text-amber-500 bg-amber-50 rounded-lg transition-colors";
+      } else {
+        btnBm.className = "p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors";
+      }
+    }
+
+    function flipCard() {
+      state.isFlipped = !state.isFlipped;
+      const fc = document.getElementById('flashcard');
+      if (state.isFlipped) {
+        fc.classList.add('rotate-y-180');
+      } else {
+        fc.classList.remove('rotate-y-180');
+      }
+    }
+
+    function nextCard() {
+      state.currentIndex = (state.currentIndex + 1) % state.cardsList.length;
+      renderCard();
+    }
+
+    function prevCard() {
+      state.currentIndex = (state.currentIndex - 1 + state.cardsList.length) % state.cardsList.length;
+      renderCard();
+    }
+
+    function markStatus(isMastered) {
+      const card = state.cardsList[state.currentIndex];
+      state.userAnswers[card.id] = isMastered;
+      saveData();
+      nextCard();
+    }
+
+    function filterFlashcards() {
+      const cat = document.getElementById('category-filter').value;
+      if (cat === "All") {
+        state.cardsList = [...QUESTIONS];
+      } else {
+        state.cardsList = QUESTIONS.filter(q => q.category === cat);
+      }
+      state.currentIndex = 0;
+      renderCard();
+    }
+
+    function shuffleCards() {
+      state.cardsList.sort(() => Math.random() - 0.5);
+      state.currentIndex = 0;
+      renderCard();
+    }
+
+    function toggleBookmarkCurrent() {
+      const card = state.cardsList[state.currentIndex];
+      const idx = state.bookmarks.indexOf(card.id);
+      if (idx > -1) {
+        state.bookmarks.splice(idx, 1);
+      } else {
+        state.bookmarks.push(card.id);
+      }
+      saveData();
+      renderCard();
+    }
+
+    // EXAM FUNCTIONS
+    function startExam() {
+      state.examQuestions = [...QUESTIONS].sort(() => Math.random() - 0.5);
+      state.examCurrentIndex = 0;
+      state.examUserAnswers = {};
+      state.examTimeRemaining = 3000; // 50 mins
+
+      document.getElementById('exam-start-screen').classList.add('hidden');
+      document.getElementById('exam-result-screen').classList.add('hidden');
+      document.getElementById('exam-result-screen').classList.remove('flex');
+      document.getElementById('exam-active-screen').classList.remove('hidden');
+      document.getElementById('exam-active-screen').classList.add('flex');
+
+      // Start Timer
+      clearInterval(state.examTimerInterval);
+      state.examTimerInterval = setInterval(() => {
+        state.examTimeRemaining--;
+        updateTimerDisplay();
+        if (state.examTimeRemaining <= 0) {
+          clearInterval(state.examTimerInterval);
+          finishExam();
+        }
+      }, 1000);
+
+      renderExamQuestion();
+      renderExamPalette();
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(state.examTimeRemaining / 60);
+      const secs = state.examTimeRemaining % 60;
+      document.getElementById('exam-timer').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function renderExamQuestion() {
+      const q = state.examQuestions[state.examCurrentIndex];
+      document.getElementById('exam-q-num').innerText = state.examCurrentIndex + 1;
+      document.getElementById('exam-question-text').innerText = q.question;
+
+      // Render SVG
+      const svgContainer = document.getElementById('exam-svg-container');
+      if (q.svg && SVG_SIGNS[q.svg]) {
+        svgContainer.innerHTML = SVG_SIGNS[q.svg];
+        svgContainer.classList.remove('hidden');
+      } else {
+        svgContainer.classList.add('hidden');
+      }
+
+      // Render Options
+      const container = document.getElementById('exam-options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        const isSelected = state.examUserAnswers[state.examCurrentIndex] === opt;
+        
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-4 rounded-xl border flex items-center gap-3 transition-all ${
+          isSelected 
+            ? 'border-blue-600 bg-blue-50/80 text-blue-900 font-bold ring-2 ring-blue-500/20' 
+            : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+        }`;
+        btn.onclick = () => selectExamOption(opt);
+        btn.innerHTML = `
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
+            isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'
+          }">${letter}</span>
+          <span class="text-sm flex-1">${opt}</span>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Nav Button state
+      document.getElementById('btn-exam-prev').disabled = state.examCurrentIndex === 0;
+      document.getElementById('btn-exam-next').innerText = 
+        state.examCurrentIndex === state.examQuestions.length - 1 ? 'Finish Test' : 'Next Question';
+
+      renderExamPalette();
+    }
+
+    function selectExamOption(opt) {
+      state.examUserAnswers[state.examCurrentIndex] = opt;
+      renderExamQuestion();
+    }
+
+    function nextExamQuestion() {
+      if (state.examCurrentIndex < state.examQuestions.length - 1) {
+        state.examCurrentIndex++;
+        renderExamQuestion();
+      } else {
+        submitExamPrompt();
+      }
+    }
+
+    function prevExamQuestion() {
+      if (state.examCurrentIndex > 0) {
+        state.examCurrentIndex--;
+        renderExamQuestion();
+      }
+    }
+
+    function renderExamPalette() {
+      const palette = document.getElementById('exam-palette');
+      palette.innerHTML = '';
+      state.examQuestions.forEach((_, idx) => {
+        const isAnswered = state.examUserAnswers[idx] !== undefined;
+        const isCurrent = idx === state.examCurrentIndex;
+
+        const btn = document.createElement('button');
+        btn.className = `w-7 h-7 rounded-lg text-xs font-bold transition-all ${
+          isCurrent 
+            ? 'ring-2 ring-blue-600 ring-offset-1 bg-blue-600 text-white' 
+            : isAnswered 
+              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
+              : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+        }`;
+        btn.innerText = idx + 1;
+        btn.onclick = () => {
+          state.examCurrentIndex = idx;
+          renderExamQuestion();
         };
-    </script>
+        palette.appendChild(btn);
+      });
+    }
+
+    function submitExamPrompt() {
+      const answeredCount = Object.keys(state.examUserAnswers).length;
+      if (answeredCount < state.examQuestions.length) {
+        if (!confirm(`You have answered ${answeredCount} of ${state.examQuestions.length} questions. Are you sure you want to submit?`)) {
+          return;
+        }
+      }
+      finishExam();
+    }
+
+    function finishExam() {
+      clearInterval(state.examTimerInterval);
+      
+      let correctCount = 0;
+      state.examQuestions.forEach((q, idx) => {
+        if (state.examUserAnswers[idx] === q.answer) {
+          correctCount++;
+        }
+      });
+
+      const passThreshold = Math.ceil(state.examQuestions.length * 0.9); // 90% pass rule
+      const isPassed = correctCount >= passThreshold;
+      const percentage = Math.round((correctCount / state.examQuestions.length) * 100);
+
+      // Save Best Score
+      if (!state.bestScore || percentage > parseInt(state.bestScore)) {
+        state.bestScore = percentage;
+        localStorage.setItem('btt_best_score', percentage);
+      }
+
+      // Hide active, show result
+      document.getElementById('exam-active-screen').classList.add('hidden');
+      document.getElementById('exam-result-screen').classList.remove('hidden');
+      document.getElementById('exam-result-screen').classList.add('flex');
+
+      const badge = document.getElementById('result-badge');
+      badge.innerText = `${percentage}%`;
+      if (isPassed) {
+        badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-extrabold shadow-lg bg-emerald-500 shadow-emerald-500/30";
+        document.getElementById('result-title').innerText = "CONGRATULATIONS! PASS";
+        document.getElementById('result-title').className = "text-2xl font-bold text-emerald-600";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      } else {
+        badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-extrabold shadow-lg bg-rose-500 shadow-rose-500/30";
+        document.getElementById('result-title').innerText = "TEST FAILED - NEEDS REVIEW";
+        document.getElementById('result-title').className = "text-2xl font-bold text-rose-600";
+      }
+
+      document.getElementById('result-subtitle').innerText = 
+        `You scored ${correctCount} out of ${state.examQuestions.length}. (Passing requirement is ${passThreshold} / 90%)`;
+    }
+
+    function reviewExamAnswers() {
+      const container = document.getElementById('exam-review-container');
+      const list = document.getElementById('exam-review-list');
+      container.classList.remove('hidden');
+      list.innerHTML = '';
+
+      state.examQuestions.forEach((q, idx) => {
+        const userChoice = state.examUserAnswers[idx];
+        const isCorrect = userChoice === q.answer;
+
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-2xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}`;
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <span class="text-xs font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+              Q${idx + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}
+            </span>
+            <span class="text-xs text-slate-400">${q.category}</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm mb-2">${q.question}</p>
+          <p class="text-xs ${isCorrect ? 'text-emerald-800' : 'text-rose-800'}"><strong>Your Choice:</strong> ${userChoice || 'None'}</p>
+          ${!isCorrect ? `<p class="text-xs text-emerald-800 mt-1"><strong>Correct Answer:</strong> ${q.answer}</p>` : ''}
+          <p class="text-xs text-slate-500 mt-2 bg-white/80 p-2 rounded-lg border border-slate-100">${q.explanation}</p>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // STATS & DASHBOARD FUNCTIONS
+    function updateStatsUI() {
+      let mastered = 0;
+      let review = 0;
+
+      QUESTIONS.forEach(q => {
+        if (state.userAnswers[q.id] === true) mastered++;
+        else if (state.userAnswers[q.id] === false) review++;
+      });
+
+      document.getElementById('stat-mastered').innerText = mastered;
+      document.getElementById('stat-review').innerText = review;
+      document.getElementById('stat-bookmarked').innerText = state.bookmarks.length;
+      document.getElementById('stat-best-score').innerText = state.bestScore ? `${state.bestScore}%` : '--';
+
+      // Category breakdown
+      const categories = ["Road Signs", "Traffic Rules", "Expressway", "DIPS", "Safety"];
+      const container = document.getElementById('topic-progress-list');
+      container.innerHTML = '';
+
+      categories.forEach(cat => {
+        const total = QUESTIONS.filter(q => q.category === cat).length;
+        const done = QUESTIONS.filter(q => q.category === cat && state.userAnswers[q.id] === true).length;
+        const pct = Math.round((done / total) * 100);
+
+        const row = document.createElement('div');
+        row.className = "flex flex-col gap-1.5";
+        row.innerHTML = `
+          <div class="flex justify-between text-xs font-bold text-slate-600">
+            <span>${cat}</span>
+            <span>${done} / ${total} (${pct}%)</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-600 transition-all duration-500 rounded-full" style="width: ${pct}%"></div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function resetUserData() {
+      if (confirm('Are you sure you want to reset all your learning history and test statistics?')) {
+        localStorage.clear();
+        state.userAnswers = {};
+        state.bookmarks = [];
+        state.bestScore = null;
+        initData();
+      }
+    }
+
+    // Keyboard Navigation Shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Only trigger if flashcards tab is active
+      if (!document.getElementById('tab-flashcards').classList.contains('hidden')) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          flipCard();
+        } else if (e.code === 'ArrowRight') {
+          nextCard();
+        } else if (e.code === 'ArrowLeft') {
+          prevCard();
+        }
+      }
+    });
+
+    // Touch Swipe Support for Mobile Flashcards
+    let touchStartX = 0;
+    const cardElem = document.getElementById('flashcard');
+    cardElem.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    cardElem.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) nextCard();
+      if (touchEndX - touchStartX > 50) prevCard();
+    });
+
+    // Initialize App
+    window.onload = initData;
+  </script>
 </body>
 </html>
